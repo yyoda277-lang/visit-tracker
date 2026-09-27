@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#111827">
+<title>PWE Visit Tracker</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
+header{background:#111827;color:white;padding:18px 16px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:21px}
+header p{margin:5px 0 0;font-size:13px;color:#d1d5db}
+.container{max-width:720px;margin:auto;padding:14px}
+.card{background:white;border-radius:14px;padding:15px;margin-bottom:14px;box-shadow:0 2px 8px #00000012}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#f9fafb;border-radius:10px;padding:12px;text-align:center}
+.stat b{display:block;font-size:22px}
+.stat span{font-size:11px;color:#6b7280}
+label{display:block;font-size:13px;font-weight:bold;margin:10px 0 5px}
+input,select,textarea,button{width:100%;font:inherit}
+input,select,textarea{border:1px solid #d1d5db;border-radius:9px;padding:11px;background:white}
+textarea{min-height:70px;resize:vertical}
+button{border:0;border-radius:9px;padding:12px;margin-top:9px;font-weight:bold;cursor:pointer}
+.primary{background:#111827;color:white}
+.secondary{background:#e5e7eb;color:#111827}
+.success{background:#166534;color:white}
+.warning{background:#d97706;color:white}
+.danger{background:#b91c1c;color:white}
+.location{background:#eff6ff;border:1px solid #bfdbfe;padding:11px;border-radius:9px;font-size:13px;margin-top:9px}
+.alert{padding:12px;border-radius:9px;margin-top:10px;font-size:13px;font-weight:bold}
+.alert.repeat{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+.alert.new{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0}
+.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.visit{border:1px solid #e5e7eb;border-radius:11px;padding:12px;margin-top:9px}
+.visit-top{display:flex;justify-content:space-between;gap:10px}
+.visit-name{font-weight:bold}
+.badge{font-size:10px;padding:4px 7px;border-radius:99px;white-space:nowrap}
+.first{background:#dcfce7;color:#166534}
+.repeat-badge{background:#fee2e2;color:#991b1b}
+.meta{font-size:12px;color:#6b7280;margin-top:5px;line-height:1.5}
+.actions{display:flex;gap:6px;margin-top:8px}
+.actions button{margin:0;padding:8px;font-size:12px}
+.empty{text-align:center;color:#6b7280;padding:25px 10px}
+small{color:#6b7280}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📍 PWE Visit Tracker</h1>
+  <p>Record outlets as you visit them and detect repeat visits.</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <div class="stats">
+      <div class="stat"><b id="total">0</b><span>Total Visits</span></div>
+      <div class="stat"><b id="unique">0</b><span>Unique Places</span></div>
+      <div class="stat"><b id="repeats">0</b><span>Repeat Visits</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Record a Visit</h3>
+
+    <label>Outlet / Place Name</label>
+    <input id="name" placeholder="e.g. ABC Shop">
+
+    <label>Route / Area</label>
+    <input id="route" placeholder="e.g. Athi River">
+
+    <label>Business Type</label>
+    <input id="type" placeholder="e.g. Kiosk, Hardware, Cyber">
+
+    <button class="primary" onclick="getLocation()">📍 Check Current Location</button>
+    <div id="locationBox" class="location" style="display:none"></div>
+    <div id="duplicateAlert"></div>
+
+    <label>Notes</label>
+    <textarea id="notes" placeholder="Optional: agent active, POS issue, paybill, feedback..."></textarea>
+
+    <button class="success" onclick="saveVisit()">💾 Save Visit</button>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">My Visits</h3>
+
+    <input id="search" placeholder="🔎 Search outlet, route or business type" oninput="renderVisits()">
+
+    <div class="toolbar">
+      <button class="secondary" onclick="exportCSV()">⬇️ Export CSV</button>
+      <button class="secondary" onclick="shareReport()">📤 Share Summary</button>
+    </div>
+
+    <button class="warning" onclick="clearAll()">⚠️ Clear All Data</button>
+
+    <div id="visitList"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">How it works</h3>
+    <small>
+      1. Enter the outlet name.<br>
+      2. Tap “Check Current Location”.<br>
+      3. Save the visit.<br>
+      4. When you return near a previously recorded place, the tracker warns you.<br>
+      5. Your records stay on this phone/browser.
+    </small>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = "pwe_visit_tracker_v1";
+let visits = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+let currentLocation = null;
+let locationChecked = false;
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(visits));
+}
+
+function esc(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+function distanceMeters(lat1,lon1,lat2,lon2){
+  const R=6371000;
+  const p=Math.PI/180;
+  const a=0.5-Math.cos((lat2-lat1)*p)/2+
+    Math.cos(lat1*p)*Math.cos(lat2*p)*
+    (1-Math.cos((lon2-lon1)*p))/2;
+  return 2*R*Math.asin(Math.sqrt(a));
+}
+
+function getLocation(){
+  const box=document.getElementById("locationBox");
+  const alert=document.getElementById("duplicateAlert");
+
+  if(!navigator.geolocation){
+    box.style.display="block";
+    box.textContent="Location is not supported by this browser.";
+    return;
+  }
+
+  box.style.display="block";
+  box.textContent="📡 Getting your GPS location...";
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+    currentLocation={
+      lat:pos.coords.latitude,
+      lon:pos.coords.longitude,
+      accuracy:pos.coords.accuracy
+    };
+    locationChecked=true;
+
+    box.innerHTML =
+      "📍 Location captured<br>" +
+      "Accuracy: approximately " + Math.round(pos.coords.accuracy) + " m";
+
+    const nearby=visits
+      .map(v=>({...v,distance:distanceMeters(currentLocation.lat,currentLocation.lon,v.lat,v.lon)}))
+      .filter(v=>v.distance<=100)
+      .sort((a,b)=>a.distance-b.distance);
+
+    if(nearby.length){
+      const v=nearby[0];
+      alert.className="alert repeat";
+      alert.innerHTML="⚠️ POSSIBLE REPEAT VISIT: <b>"+esc(v.name)+
+        "</b> is about "+Math.round(v.distance)+" m away. Last recorded: "+
+        esc(formatDate(v.date))+".";
+    }else{
+      alert.className="alert new";
+      alert.innerHTML="✅ No previously recorded place found within 100 m.";
+    }
+  },err=>{
+    locationChecked=false;
+    box.style.display="block";
+    box.textContent="❌ Could not get location: "+locationError(err.code);
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+}
+
+function locationError(code){
+  if(code===1) return "Location permission was denied. Allow location permission in your browser.";
+  if(code===2) return "Your location could not be determined. Try again outdoors.";
+  if(code===3) return "Location request timed out. Try again.";
+  return "Unknown location error.";
+}
+
+function saveVisit(){
+  const name=document.getElementById("name").value.trim();
+  const route=document.getElementById("route").value.trim();
+  const type=document.getElementById("type").value.trim();
+  const notes=document.getElementById("notes").value.trim();
+
+  if(!name){
+    alert("Enter the outlet/place name first.");
+    return;
+  }
+
+  if(!locationChecked || !currentLocation){
+    alert("Please tap “Check Current Location” before saving the visit.");
+    return;
+  }
+
+  const nearby=visits.filter(v=>
+    distanceMeters(currentLocation.lat,currentLocation.lon,v.lat,v.lon)<=100
+  );
+
+  const visit={
+    id:Date.now(),
+    name,route,type,notes,
+    lat:currentLocation.lat,
+    lon:currentLocation.lon,
+    accuracy:currentLocation.accuracy,
+    date:new Date().toISOString(),
+    repeat:nearby.length>0
+  };
+
+  visits.unshift(visit);
+  saveData();
+  resetForm();
+  renderVisits();
+
+  if(nearby.length){
+    alert("Visit saved. ⚠️ This location is already in your records.");
+  }else{
+    alert("Visit saved successfully.");
+  }
+}
+
+function resetForm(){
+  document.getElementById("name").value="";
+  document.getElementById("route").value="";
+  document.getElementById("type").value="";
+  document.getElementById("notes").value="";
+  document.getElementById("locationBox").style.display="none";
+  document.getElementById("duplicateAlert").innerHTML="";
+  currentLocation=null;
+  locationChecked=false;
+}
+
+function formatDate(date){
+  return new Date(date).toLocaleString([],{
+    day:"2-digit",month:"short",year:"numeric",
+    hour:"2-digit",minute:"2-digit"
+  });
+}
+
+function renderVisits(){
+  const q=document.getElementById("search").value.toLowerCase().trim();
+  const list=document.getElementById("visitList");
+
+  document.getElementById("total").textContent=visits.length;
+
+  const groups={};
+  visits.forEach(v=>{
+    const key=v.lat.toFixed(4)+","+v.lon.toFixed(4);
+    groups[key]=(groups[key]||0)+1;
+  });
+
+  document.getElementById("unique").textContent=Object.keys(groups).length;
+  document.getElementById("repeats").textContent=
+    visits.filter(v=>v.repeat).length;
+
+  const filtered=visits.filter(v=>
+    (v.name+" "+v.route+" "+v.type+" "+v.notes).toLowerCase().includes(q)
+  );
+
+  if(!filtered.length){
+    list.innerHTML='<div class="empty">No visits recorded yet.</div>';
+    return;
+  }
+
+  list.innerHTML=filtered.map(v=>{
+    const badge=v.repeat
+      ? '<span class="badge repeat-badge">REPEAT</span>'
+      : '<span class="badge first">FIRST VISIT</span>';
+
+    return `
+      <div class="visit">
+        <div class="visit-top">
+          <div class="visit-name">${esc(v.name)}</div>
+          ${badge}
+        </div>
+        <div class="meta">
+          📍 ${esc(v.route||"Route not entered")}<br>
+          🏪 ${esc(v.type||"Business type not entered")}<br>
+          🕒 ${esc(formatDate(v.date))}<br>
+          GPS: ${v.lat.toFixed(6)}, ${v.lon.toFixed(6)}
+          ${v.notes ? "<br>📝 "+esc(v.notes) : ""}
+        </div>
+        <div class="actions">
+          <button class="secondary" onclick="openMap(${v.lat},${v.lon})">🗺️ Map</button>
+          <button class="danger" onclick="deleteVisit(${v.id})">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function deleteVisit(id){
+  if(!confirm("Delete this visit?")) return;
+  visits=visits.filter(v=>v.id!==id);
+  saveData();
+  renderVisits();
+}
+
+function openMap(lat,lon){
+  window.open("https://www.google.com/maps?q="+lat+","+lon,"_blank");
+}
+
+function exportCSV(){
+  if(!visits.length){
+    alert("There are no visits to export.");
+    return;
+  }
+
+  let csv="Outlet,Route,Business Type,Date,Latitude,Longitude,Accuracy,Repeat,Notes\n";
+
+  visits.forEach(v=>{
+    const row=[
+      v.name,v.route,v.type,formatDate(v.date),
+      v.lat,v.lon,Math.round(v.accuracy||0),
+      v.repeat?"Yes":"No",v.notes
+    ].map(x=>'"'+String(x??"").replace(/"/g,'""')+'"').join(",");
+    csv+=row+"\n";
+  });
+
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="PWE_Visit_Tracker_"+new Date().toISOString().slice(0,10)+".csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function shareReport(){
+  const summary=
+    "PWE VISIT SUMMARY\n"+
+    "Total visits: "+visits.length+"\n"+
+    "Unique places: "+new Set(visits.map(v=>v.lat.toFixed(4)+","+v.lon.toFixed(4))).size+"\n"+
+    "Repeat visits: "+visits.filter(v=>v.repeat).length;
+
+  if(navigator.share){
+    try{
+      await navigator.share({title:"PWE Visit Summary",text:summary});
+    }catch(e){}
+  }else{
+    try{
+      await navigator.clipboard.writeText(summary);
+      alert("Summary copied. You can paste it into WhatsApp.");
+    }catch(e){
+      alert(summary);
+    }
+  }
+}
+
+function clearAll(){
+  if(!visits.length) return;
+  if(confirm("This will permanently delete all saved visits on this browser. Continue?")){
+    visits=[];
+    saveData();
+    renderVisits();
+  }
+}
+
+renderVisits();
+</script>
+</body>
+</html>
