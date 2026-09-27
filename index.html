@@ -1,294 +1,220 @@
+```html
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#111827">
-<meta name="description" content="A simple personal field notes and location tracker.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Field Notes</title>
 
+<!-- Leaflet map -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
 <style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f3f4f6;
-  color:#111827;
-}
-
-header{
-  background:#111827;
-  color:white;
-  padding:18px 16px;
-  position:sticky;
-  top:0;
-  z-index:10;
-}
-
-header h1{
-  margin:0;
-  font-size:21px;
-}
-
-header p{
-  margin:5px 0 0;
-  font-size:13px;
-  color:#d1d5db;
-}
-
-.container{
-  max-width:720px;
-  margin:auto;
-  padding:14px;
-}
-
-.card{
-  background:white;
-  border-radius:14px;
-  padding:15px;
-  margin-bottom:14px;
-  box-shadow:0 2px 8px #00000012;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-}
-
-.stat{
-  background:#f9fafb;
-  border-radius:10px;
-  padding:12px;
-  text-align:center;
-}
-
-.stat b{
-  display:block;
-  font-size:22px;
-}
-
-.stat span{
-  font-size:11px;
-  color:#6b7280;
-}
-
-h3{
-  margin-top:0;
-}
-
-label{
-  display:block;
-  font-size:13px;
-  font-weight:bold;
-  margin:10px 0 5px;
-}
-
-input,
-select,
-textarea,
-button{
-  width:100%;
-  font:inherit;
-}
-
-input,
-select,
-textarea{
-  border:1px solid #d1d5db;
-  border-radius:9px;
-  padding:11px;
-  background:white;
-  outline:none;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-  border-color:#6b7280;
-}
-
-textarea{
-  min-height:80px;
-  resize:vertical;
-}
-
-button{
-  border:0;
-  border-radius:9px;
-  padding:12px;
-  margin-top:9px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-button:active{
-  transform:scale(.99);
-}
-
-.primary{
-  background:#111827;
-  color:white;
-}
-
-.secondary{
-  background:#e5e7eb;
-  color:#111827;
-}
-
-.success{
-  background:#166534;
-  color:white;
-}
-
-.warning{
-  background:#d97706;
-  color:white;
-}
-
-.danger{
-  background:#b91c1c;
-  color:white;
-}
-
-.location{
-  background:#eff6ff;
-  border:1px solid #bfdbfe;
-  padding:11px;
-  border-radius:9px;
-  font-size:13px;
-  margin-top:9px;
-  line-height:1.5;
-}
-
-.alert{
-  padding:12px;
-  border-radius:9px;
-  margin-top:10px;
-  font-size:13px;
-  font-weight:bold;
-  line-height:1.5;
-}
-
-.alert.repeat{
-  background:#fef2f2;
-  color:#991b1b;
-  border:1px solid #fecaca;
-}
-
-.alert.new{
-  background:#ecfdf5;
-  color:#166534;
-  border:1px solid #bbf7d0;
-}
-
-.toolbar{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-
-.visit{
-  border:1px solid #e5e7eb;
-  border-radius:11px;
-  padding:12px;
-  margin-top:9px;
-}
-
-.visit-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-}
-
-.visit-name{
-  font-weight:bold;
-  font-size:15px;
-}
-
-.badge{
-  font-size:10px;
-  padding:4px 7px;
-  border-radius:99px;
-  white-space:nowrap;
-}
-
-.first{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.repeat-badge{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.meta{
-  font-size:12px;
-  color:#6b7280;
-  margin-top:6px;
-  line-height:1.6;
-  word-break:break-word;
-}
-
-.actions{
-  display:flex;
-  gap:6px;
-  margin-top:9px;
-}
-
-.actions button{
-  margin:0;
-  padding:8px;
-  font-size:12px;
-}
-
-.empty{
-  text-align:center;
-  color:#6b7280;
-  padding:25px 10px;
-}
-
-small{
-  color:#6b7280;
-  line-height:1.6;
-}
-
-.divider{
-  height:1px;
-  background:#e5e7eb;
-  margin:15px 0;
-}
-
-.status{
-  font-size:12px;
-  color:#6b7280;
-  margin-top:8px;
-  text-align:center;
-}
-
-@media(max-width:420px){
-  .stats{
-    gap:5px;
+  * {
+    box-sizing: border-box;
   }
 
-  .stat{
-    padding:10px 5px;
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
   }
 
-  .stat b{
-    font-size:20px;
+  header {
+    background: #1f2937;
+    color: white;
+    padding: 18px;
+    text-align: center;
   }
 
-  .stat span{
-    font-size:10px;
+  header h1 {
+    margin: 0 0 5px;
+    font-size: 24px;
   }
-}
+
+  header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.85;
+  }
+
+  .container {
+    width: 95%;
+    max-width: 1000px;
+    margin: 20px auto;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .stat {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 7px rgba(0,0,0,0.08);
+  }
+
+  .stat strong {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .card {
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 7px rgba(0,0,0,0.08);
+  }
+
+  .card h2 {
+    margin-top: 0;
+    font-size: 19px;
+  }
+
+  label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    width: 100%;
+    font: inherit;
+  }
+
+  input,
+  select,
+  textarea {
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    background: white;
+  }
+
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  button {
+    border: none;
+    border-radius: 7px;
+    padding: 11px;
+    margin-top: 10px;
+    cursor: pointer;
+    background: #1f2937;
+    color: white;
+    font-weight: bold;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  .location-btn {
+    background: #2563eb;
+  }
+
+  .secondary {
+    background: #6b7280;
+  }
+
+  .danger {
+    background: #dc2626;
+  }
+
+  .success {
+    background: #15803d;
+  }
+
+  #locationStatus {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  #map {
+    width: 100%;
+    height: 450px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .visit {
+    border: 1px solid #ddd;
+    border-radius: 9px;
+    padding: 14px;
+    margin-top: 10px;
+    background: #fafafa;
+  }
+
+  .visit h3 {
+    margin: 0 0 6px;
+  }
+
+  .visit p {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+
+  .visit-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .visit-buttons button {
+    margin-top: 0;
+  }
+
+  .search {
+    margin-bottom: 12px;
+  }
+
+  .empty {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+  }
+
+  footer {
+    text-align: center;
+    color: #777;
+    font-size: 12px;
+    padding: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .stats {
+      grid-template-columns: 1fr;
+    }
+
+    #map {
+      height: 380px;
+    }
+
+    .visit-buttons {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
-
 </head>
 
 <body>
@@ -300,189 +226,143 @@ small{
 
 <div class="container">
 
-  <!-- SUMMARY -->
+  <!-- Statistics -->
+  <div class="stats">
+    <div class="stat">
+      <strong id="visitCount">0</strong>
+      Visits
+    </div>
 
+    <div class="stat">
+      <strong id="placeCount">0</strong>
+      Places
+    </div>
+
+    <div class="stat">
+      <strong id="returnCount">0</strong>
+      Returns
+    </div>
+  </div>
+
+  <!-- Add Visit -->
   <div class="card">
+    <h2>Add a Visit</h2>
 
-```
-<div class="stats">
+    <label for="placeName">Place Name</label>
+    <input
+      type="text"
+      id="placeName"
+      placeholder="e.g. Main Street Shop"
+    >
 
-  <div class="stat">
-    <b id="total">0</b>
-    <span>Visits</span>
+    <label for="area">Area</label>
+    <input
+      type="text"
+      id="area"
+      placeholder="e.g. Town Centre"
+    >
+
+    <label for="category">Category</label>
+    <select id="category">
+      <option value="">Select category</option>
+      <option>Shop</option>
+      <option>Restaurant</option>
+      <option>Hotel</option>
+      <option>Office</option>
+      <option>Market</option>
+      <option>Service</option>
+      <option>Other</option>
+    </select>
+
+    <label for="notes">Notes</label>
+    <textarea
+      id="notes"
+      placeholder="Add any notes about this visit..."
+    ></textarea>
+
+    <button class="location-btn" onclick="getLocation()">
+      📍 Check My Location
+    </button>
+
+    <div id="locationStatus">
+      Location not captured yet.
+    </div>
+
+    <button class="success" onclick="saveVisit()">
+      Save Visit
+    </button>
   </div>
 
-  <div class="stat">
-    <b id="unique">0</b>
-    <span>Places</span>
+  <!-- Map -->
+  <div class="card">
+    <h2>🗺️ Visited Places</h2>
+    <p style="font-size:13px;color:#666;">
+      Your saved locations appear as dots on the map.
+    </p>
+
+    <div id="map"></div>
+
+    <button class="secondary" onclick="fitMapToVisits()">
+      Show All Visits
+    </button>
   </div>
 
-  <div class="stat">
-    <b id="repeats">0</b>
-    <span>Returns</span>
+  <!-- Visits -->
+  <div class="card">
+    <h2>Visit History</h2>
+
+    <input
+      class="search"
+      type="text"
+      id="search"
+      placeholder="Search places, areas or categories..."
+      oninput="displayVisits()"
+    >
+
+    <div id="visitList"></div>
+  </div>
+
+  <!-- Tools -->
+  <div class="card">
+    <h2>Tools</h2>
+
+    <button onclick="exportCSV()">
+      📄 Export Visits
+    </button>
+
+    <button onclick="shareSummary()" class="secondary">
+      📤 Share Summary
+    </button>
+
+    <button onclick="clearAll()" class="danger">
+      🗑️ Clear All Visits
+    </button>
+  </div>
+
+  <!-- About -->
+  <div class="card">
+    <h2>About</h2>
+
+    <p style="font-size:14px;line-height:1.5;">
+      This is a simple personal location and notes tracker.
+      Your saved records are stored in this browser on this device.
+    </p>
+
+    <p style="font-size:13px;color:#666;">
+      Location access is only used when you choose to check your location.
+    </p>
   </div>
 
 </div>
-```
 
-  </div>
+<footer>
+  Personal Field Notes
+</footer>
 
-  <!-- ADD VISIT -->
-
-  <div class="card">
-
-```
-<h3>Record a Place</h3>
-
-<label for="name">Place Name</label>
-
-<input
-  id="name"
-  type="text"
-  placeholder="e.g. ABC Shop"
-  autocomplete="off"
->
-
-
-<label for="area">Area</label>
-
-<input
-  id="area"
-  type="text"
-  placeholder="e.g. Athi River"
-  autocomplete="off"
->
-
-
-<label for="category">Category</label>
-
-<input
-  id="category"
-  type="text"
-  placeholder="e.g. Shop, Hardware, Office"
-  autocomplete="off"
->
-
-
-<button
-  class="primary"
-  onclick="getLocation()"
->
-  📍 Check Location
-</button>
-
-
-<div
-  id="locationBox"
-  class="location"
-  style="display:none"
-></div>
-
-
-<div id="duplicateAlert"></div>
-
-
-<label for="notes">Notes</label>
-
-<textarea
-  id="notes"
-  placeholder="Optional notes..."
-></textarea>
-
-
-<button
-  class="success"
-  onclick="saveVisit()"
->
-  💾 Save
-</button>
-```
-
-  </div>
-
-  <!-- VISITS -->
-
-  <div class="card">
-
-```
-<h3>My Places</h3>
-
-<input
-  id="search"
-  type="search"
-  placeholder="🔎 Search places..."
-  oninput="renderVisits()"
->
-
-
-<div class="toolbar">
-
-  <button
-    class="secondary"
-    onclick="exportCSV()"
-  >
-    ⬇️ Export
-  </button>
-
-
-  <button
-    class="secondary"
-    onclick="shareSummary()"
-  >
-    📤 Share
-  </button>
-
-</div>
-
-
-<button
-  class="warning"
-  onclick="clearAll()"
->
-  ⚠️ Clear All
-</button>
-
-
-<div id="visitList"></div>
-```
-
-  </div>
-
-  <!-- INFORMATION -->
-
-  <div class="card">
-
-```
-<h3>About</h3>
-
-<small>
-  This is a simple personal location and notes tracker.
-  Your saved records are stored locally in your browser on this device.
-  Location access is only requested when you tap the location button.
-</small>
-
-<div class="divider"></div>
-
-<small>
-  <b>Location matching:</b><br>
-  A return is detected when a new location is within approximately
-  100 metres of a previously saved location.
-</small>
-```
-
-  </div>
-
-  <div class="status">
-    Personal Field Notes
-  </div>
-
-</div>
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-
-/* ==============================
-   STORAGE
-============================== */
 
 const STORAGE_KEY = "field_notes_v2";
 
@@ -491,620 +371,427 @@ let visits = JSON.parse(
 );
 
 let currentLocation = null;
-let locationChecked = false;
+let map;
+let markers = [];
 
 
-/* ==============================
-   SAVE DATA
-============================== */
+/* =========================
+   INITIALISE MAP
+========================= */
 
-function saveData(){
+function initMap() {
+
+  map = L.map("map").setView(
+    [0.0236, 37.9062],
+    6
+  );
+
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors"
+    }
+  ).addTo(map);
+
+  updateMap();
+}
+
+
+/* =========================
+   UPDATE MAP
+========================= */
+
+function updateMap() {
+
+  if (!map) return;
+
+  markers.forEach(marker => {
+    map.removeLayer(marker);
+  });
+
+  markers = [];
+
+  const validVisits = visits.filter(
+    visit =>
+      typeof visit.lat === "number" &&
+      typeof visit.lng === "number"
+  );
+
+  validVisits.forEach(visit => {
+
+    const marker = L.marker([
+      visit.lat,
+      visit.lng
+    ]).addTo(map);
+
+    const date = new Date(
+      visit.date
+    ).toLocaleString();
+
+    marker.bindPopup(`
+      <strong>${escapeHTML(visit.place)}</strong><br>
+      ${escapeHTML(visit.area || "")}<br>
+      ${escapeHTML(visit.category || "")}<br>
+      <small>${date}</small>
+      ${
+        visit.notes
+          ? `<br><br>${escapeHTML(visit.notes)}`
+          : ""
+      }
+    `);
+
+    markers.push(marker);
+  });
+}
+
+
+/* =========================
+   GET LOCATION
+========================= */
+
+function getLocation() {
+
+  const status =
+    document.getElementById("locationStatus");
+
+  if (!navigator.geolocation) {
+
+    status.textContent =
+      "Location is not supported by this browser.";
+
+    return;
+  }
+
+  status.textContent =
+    "Checking your location...";
+
+  navigator.geolocation.getCurrentPosition(
+
+    position => {
+
+      currentLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      status.textContent =
+        "✓ Location captured successfully.";
+
+    },
+
+    error => {
+
+      currentLocation = null;
+
+      if (error.code === 1) {
+        status.textContent =
+          "Location permission was denied.";
+      } else if (error.code === 2) {
+        status.textContent =
+          "Your location could not be determined.";
+      } else {
+        status.textContent =
+          "Location request timed out.";
+      }
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
+
+
+/* =========================
+   SAVE VISIT
+========================= */
+
+function saveVisit() {
+
+  const place =
+    document.getElementById("placeName")
+      .value.trim();
+
+  const area =
+    document.getElementById("area")
+      .value.trim();
+
+  const category =
+    document.getElementById("category")
+      .value;
+
+  const notes =
+    document.getElementById("notes")
+      .value.trim();
+
+  if (!place) {
+
+    alert("Please enter the place name.");
+
+    return;
+  }
+
+  if (!currentLocation) {
+
+    alert(
+      "Please check your location before saving this visit."
+    );
+
+    return;
+  }
+
+  const now = new Date();
+
+  const newVisit = {
+
+    id: Date.now(),
+
+    place: place,
+
+    area: area,
+
+    category: category,
+
+    notes: notes,
+
+    lat: currentLocation.lat,
+
+    lng: currentLocation.lng,
+
+    date: now.toISOString()
+  };
+
+
+  /*
+    Check whether this visit is a return
+    to a location within approximately 100 metres.
+  */
+
+  const isReturn = visits.some(
+    visit => {
+
+      if (
+        typeof visit.lat !== "number" ||
+        typeof visit.lng !== "number"
+      ) {
+        return false;
+      }
+
+      const distance =
+        calculateDistance(
+          newVisit.lat,
+          newVisit.lng,
+          visit.lat,
+          visit.lng
+        );
+
+      return distance <= 100;
+    }
+  );
+
+  newVisit.isReturn = isReturn;
+
+  visits.unshift(newVisit);
 
   localStorage.setItem(
     STORAGE_KEY,
     JSON.stringify(visits)
   );
 
+  currentLocation = null;
+
+  document.getElementById("placeName").value = "";
+  document.getElementById("area").value = "";
+  document.getElementById("category").value = "";
+  document.getElementById("notes").value = "";
+
+  document.getElementById("locationStatus").textContent =
+    "Location not captured yet.";
+
+  displayVisits();
+  updateMap();
+
+  alert(
+    isReturn
+      ? "Visit saved. This looks like a return visit."
+      : "Visit saved successfully."
+  );
 }
 
 
-/* ==============================
-   SAFE TEXT
-============================== */
+/* =========================
+   DISTANCE CALCULATION
+========================= */
 
-function esc(value){
-
-  return String(value ?? "")
-    .replace(/[&<>"']/g, c => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-    }[c]));
-
-}
-
-
-/* ==============================
-   DISTANCE
-============================== */
-
-function distanceMeters(
+function calculateDistance(
   lat1,
   lon1,
   lat2,
   lon2
-){
+) {
 
-  const R = 6371000;
+  const earthRadius = 6371000;
 
-  const p = Math.PI / 180;
+  const dLat =
+    (lat2 - lat1) *
+    Math.PI / 180;
+
+  const dLon =
+    (lon2 - lon1) *
+    Math.PI / 180;
 
   const a =
-    0.5 -
-    Math.cos((lat2-lat1)*p)/2 +
-    Math.cos(lat1*p) *
-    Math.cos(lat2*p) *
-    (1 -
-      Math.cos((lon2-lon1)*p)
-    )/2;
+    Math.sin(dLat / 2) *
+    Math.sin(dLat / 2) +
 
-  return 2 *
-    R *
-    Math.asin(
-      Math.sqrt(a)
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
+
+  const c =
+    2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
     );
 
+  return earthRadius * c;
 }
 
 
-/* ==============================
-   GET LOCATION
-============================== */
-
-function getLocation(){
-
-  const box =
-    document.getElementById(
-      "locationBox"
-    );
-
-  const alertBox =
-    document.getElementById(
-      "duplicateAlert"
-    );
-
-
-  if(!navigator.geolocation){
-
-    box.style.display = "block";
-
-    box.textContent =
-      "Location is not supported by this browser.";
-
-    return;
-  }
-
-
-  box.style.display = "block";
-
-  box.textContent =
-    "📡 Getting your location...";
-
-
-  navigator.geolocation.getCurrentPosition(
-
-    function(pos){
-
-      currentLocation = {
-
-        lat:
-          pos.coords.latitude,
-
-        lon:
-          pos.coords.longitude,
-
-        accuracy:
-          pos.coords.accuracy
-
-      };
-
-
-      locationChecked = true;
-
-
-      box.innerHTML =
-        "📍 Location captured<br>" +
-        "Accuracy: approximately " +
-        Math.round(
-          pos.coords.accuracy
-        ) +
-        " metres";
-
-
-      const nearby = visits
-
-        .map(function(v){
-
-          return {
-
-            ...v,
-
-            distance:
-              distanceMeters(
-                currentLocation.lat,
-                currentLocation.lon,
-                v.lat,
-                v.lon
-              )
-
-          };
-
-        })
-
-        .filter(function(v){
-
-          return v.distance <= 100;
-
-        })
-
-        .sort(function(a,b){
-
-          return a.distance -
-                 b.distance;
-
-        });
-
-
-      if(nearby.length){
-
-        const v = nearby[0];
-
-
-        alertBox.className =
-          "alert repeat";
-
-
-        alertBox.innerHTML =
-          "⚠️ POSSIBLE RETURN<br>" +
-          "<b>" +
-          esc(v.name) +
-          "</b> is approximately " +
-          Math.round(v.distance) +
-          " metres away.<br>" +
-          "Last recorded: " +
-          esc(formatDate(v.date)) +
-          ".";
-
-
-      }else{
-
-        alertBox.className =
-          "alert new";
-
-
-        alertBox.innerHTML =
-          "✅ No previously saved place found within 100 metres.";
-
-      }
-
-    },
-
-
-    function(err){
-
-      locationChecked = false;
-
-      box.style.display = "block";
-
-      box.textContent =
-        "❌ Could not get location: " +
-        locationError(err.code);
-
-    },
-
-
-    {
-
-      enableHighAccuracy:true,
-
-      timeout:15000,
-
-      maximumAge:0
-
-    }
-
-  );
-
-}
-
-
-/* ==============================
-   LOCATION ERROR
-============================== */
-
-function locationError(code){
-
-  if(code === 1){
-
-    return "Location permission was denied. Allow location access in your browser.";
-
-  }
-
-  if(code === 2){
-
-    return "Your location could not be determined. Try again outdoors.";
-
-  }
-
-  if(code === 3){
-
-    return "The location request timed out. Try again.";
-
-  }
-
-  return "Unknown location error.";
-
-}
-
-
-/* ==============================
-   SAVE VISIT
-============================== */
-
-function saveVisit(){
-
-  const name =
-    document
-      .getElementById("name")
-      .value
-      .trim();
-
-
-  const area =
-    document
-      .getElementById("area")
-      .value
-      .trim();
-
-
-  const category =
-    document
-      .getElementById("category")
-      .value
-      .trim();
-
-
-  const notes =
-    document
-      .getElementById("notes")
-      .value
-      .trim();
-
-
-  if(!name){
-
-    alert(
-      "Enter the place name first."
-    );
-
-    return;
-
-  }
-
-
-  if(
-    !locationChecked ||
-    !currentLocation
-  ){
-
-    alert(
-      "Please check the location before saving."
-    );
-
-    return;
-
-  }
-
-
-  const nearby = visits.filter(
-    function(v){
-
-      return distanceMeters(
-        currentLocation.lat,
-        currentLocation.lon,
-        v.lat,
-        v.lon
-      ) <= 100;
-
-    }
-  );
-
-
-  const visit = {
-
-    id:Date.now(),
-
-    name:name,
-
-    area:area,
-
-    category:category,
-
-    notes:notes,
-
-    lat:
-      currentLocation.lat,
-
-    lon:
-      currentLocation.lon,
-
-    accuracy:
-      currentLocation.accuracy,
-
-    date:
-      new Date().toISOString(),
-
-    repeat:
-      nearby.length > 0
-
-  };
-
-
-  visits.unshift(visit);
-
-  saveData();
-
-  resetForm();
-
-  renderVisits();
-
-
-  if(nearby.length){
-
-    alert(
-      "Saved. This location is already in your records."
-    );
-
-  }else{
-
-    alert(
-      "Saved successfully."
-    );
-
-  }
-
-}
-
-
-/* ==============================
-   RESET FORM
-============================== */
-
-function resetForm(){
-
-  document
-    .getElementById("name")
-    .value = "";
-
-
-  document
-    .getElementById("area")
-    .value = "";
-
-
-  document
-    .getElementById("category")
-    .value = "";
-
-
-  document
-    .getElementById("notes")
-    .value = "";
-
-
-  document
-    .getElementById("locationBox")
-    .style.display = "none";
-
-
-  document
-    .getElementById("duplicateAlert")
-    .innerHTML = "";
-
-
-  currentLocation = null;
-
-  locationChecked = false;
-
-}
-
-
-/* ==============================
-   DATE
-============================== */
-
-function formatDate(date){
-
-  return new Date(date)
-    .toLocaleString(
-      [],
-      {
-        day:"2-digit",
-        month:"short",
-        year:"numeric",
-        hour:"2-digit",
-        minute:"2-digit"
-      }
-    );
-
-}
-
-
-/* ==============================
-   RENDER VISITS
-============================== */
-
-function renderVisits(){
-
-  const q =
-    document
-      .getElementById("search")
-      .value
-      .toLowerCase()
-      .trim();
-
+/* =========================
+   DISPLAY VISITS
+========================= */
+
+function displayVisits() {
 
   const list =
-    document.getElementById(
-      "visitList"
-    );
+    document.getElementById("visitList");
 
-
-  document.getElementById(
-    "total"
-  ).textContent =
-    visits.length;
-
-
-  const groups = {};
-
-
-  visits.forEach(function(v){
-
-    const key =
-      v.lat.toFixed(4) +
-      "," +
-      v.lon.toFixed(4);
-
-
-    groups[key] =
-      (groups[key] || 0) + 1;
-
-  });
-
-
-  document.getElementById(
-    "unique"
-  ).textContent =
-    Object.keys(groups).length;
-
-
-  document.getElementById(
-    "repeats"
-  ).textContent =
-    visits.filter(
-      function(v){
-        return v.repeat;
-      }
-    ).length;
-
+  const search =
+    document.getElementById("search")
+      .value.toLowerCase()
+      .trim();
 
   const filtered =
-    visits.filter(function(v){
+    visits.filter(visit => {
 
       return (
-        v.name +
-        " " +
-        v.area +
-        " " +
-        v.category +
-        " " +
-        v.notes
-      )
-      .toLowerCase()
-      .includes(q);
-
+        visit.place.toLowerCase().includes(search) ||
+        (visit.area || "")
+          .toLowerCase()
+          .includes(search) ||
+        (visit.category || "")
+          .toLowerCase()
+          .includes(search) ||
+        (visit.notes || "")
+          .toLowerCase()
+          .includes(search)
+      );
     });
 
 
-  if(!filtered.length){
+  document.getElementById("visitCount")
+    .textContent = visits.length;
 
-    list.innerHTML =
-      '<div class="empty">' +
-      'No places recorded yet.' +
-      '</div>';
+
+  const uniquePlaces =
+    new Set(
+      visits.map(
+        visit =>
+          `${visit.place.toLowerCase()}|${visit.area.toLowerCase()}`
+      )
+    );
+
+  document.getElementById("placeCount")
+    .textContent = uniquePlaces.size;
+
+
+  const returns =
+    visits.filter(
+      visit => visit.isReturn
+    ).length;
+
+  document.getElementById("returnCount")
+    .textContent = returns;
+
+
+  if (filtered.length === 0) {
+
+    list.innerHTML = `
+      <div class="empty">
+        No visits found.
+      </div>
+    `;
 
     return;
-
   }
 
 
   list.innerHTML =
-    filtered.map(function(v){
+    filtered.map(visit => {
 
-      const badge =
-        v.repeat
-
-        ? '<span class="badge repeat-badge">RETURN</span>'
-
-        : '<span class="badge first">FIRST VISIT</span>';
+      const date =
+        new Date(
+          visit.date
+        ).toLocaleString();
 
 
       return `
-
         <div class="visit">
 
-          <div class="visit-top">
-
-            <div class="visit-name">
-              ${esc(v.name)}
-            </div>
-
-            ${badge}
-
-          </div>
-
-
-          <div class="meta">
-
-            📍 ${esc(
-              v.area ||
-              "Area not entered"
-            )}<br>
-
-            🏷️ ${esc(
-              v.category ||
-              "Category not entered"
-            )}<br>
-
-            🕒 ${esc(
-              formatDate(v.date)
-            )}<br>
-
-            📌 GPS:
-            ${v.lat.toFixed(6)},
-            ${v.lon.toFixed(6)}
+          <h3>
+            ${escapeHTML(visit.place)}
 
             ${
-              v.notes
-              ? "<br>📝 " +
-                esc(v.notes)
-              : ""
+              visit.isReturn
+                ? " 🔁"
+                : ""
             }
+          </h3>
 
-          </div>
+          <p>
+            <strong>Area:</strong>
+            ${escapeHTML(visit.area || "-")}
+          </p>
 
+          <p>
+            <strong>Category:</strong>
+            ${escapeHTML(visit.category || "-")}
+          </p>
 
-          <div class="actions">
+          <p>
+            <strong>Date:</strong>
+            ${date}
+          </p>
+
+          ${
+            visit.notes
+              ? `
+                <p>
+                  <strong>Notes:</strong>
+                  ${escapeHTML(visit.notes)}
+                </p>
+              `
+              : ""
+          }
+
+          <div class="visit-buttons">
 
             <button
-              class="secondary"
-              onclick="openMap(
-                ${v.lat},
-                ${v.lon}
-              )"
+              onclick="showVisitOnMap(${visit.id})"
             >
-              🗺️ Map
+              📍 Show on Map
             </button>
-
 
             <button
               class="danger"
-              onclick="deleteVisit(
-                ${v.id}
-              )"
+              onclick="deleteVisit(${visit.id})"
             >
               Delete
             </button>
@@ -1112,293 +799,370 @@ function renderVisits(){
           </div>
 
         </div>
-
       `;
 
     }).join("");
-
 }
 
 
-/* ==============================
-   DELETE
-============================== */
+/* =========================
+   SHOW VISIT ON MAP
+========================= */
 
-function deleteVisit(id){
+function showVisitOnMap(id) {
 
-  if(
-    !confirm(
-      "Delete this saved place?"
-    )
-  ){
+  const visit =
+    visits.find(
+      item => item.id === id
+    );
 
+  if (
+    !visit ||
+    typeof visit.lat !== "number" ||
+    typeof visit.lng !== "number"
+  ) {
     return;
-
   }
 
+  map.setView(
+    [visit.lat, visit.lng],
+    17
+  );
 
-  visits =
-    visits.filter(
-      function(v){
-        return v.id !== id;
+  const marker =
+    markers.find(
+      item => {
+
+        const position =
+          item.getLatLng();
+
+        return (
+          Math.abs(position.lat - visit.lat) < 0.000001 &&
+          Math.abs(position.lng - visit.lng) < 0.000001
+        );
       }
     );
 
-
-  saveData();
-
-  renderVisits();
-
+  if (marker) {
+    marker.openPopup();
+  }
 }
 
 
-/* ==============================
-   OPEN MAP
-============================== */
+/* =========================
+   FIT MAP TO ALL VISITS
+========================= */
 
-function openMap(
-  lat,
-  lon
-){
+function fitMapToVisits() {
 
-  window.open(
-    "https://www.google.com/maps?q=" +
-    lat +
-    "," +
-    lon,
-    "_blank"
-  );
+  const validVisits =
+    visits.filter(
+      visit =>
+        typeof visit.lat === "number" &&
+        typeof visit.lng === "number"
+    );
 
-}
-
-
-/* ==============================
-   EXPORT CSV
-============================== */
-
-function exportCSV(){
-
-  if(!visits.length){
+  if (validVisits.length === 0) {
 
     alert(
-      "There are no saved places to export."
+      "There are no saved locations yet."
     );
 
     return;
-
   }
 
+  const bounds =
+    L.latLngBounds(
+      validVisits.map(
+        visit => [
+          visit.lat,
+          visit.lng
+        ]
+      )
+    );
 
-  let csv =
-    "Place,Area,Category,Date,Latitude,Longitude,Accuracy,Return,Notes\n";
+  map.fitBounds(
+    bounds,
+    {
+      padding: [30, 30]
+    }
+  );
+}
 
 
-  visits.forEach(function(v){
+/* =========================
+   DELETE VISIT
+========================= */
 
-    const row = [
+function deleteVisit(id) {
 
-      v.name,
+  const confirmed =
+    confirm(
+      "Delete this visit?"
+    );
 
-      v.area,
+  if (!confirmed) return;
 
-      v.category,
+  visits =
+    visits.filter(
+      visit => visit.id !== id
+    );
 
-      formatDate(v.date),
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(visits)
+  );
 
-      v.lat,
+  displayVisits();
+  updateMap();
+}
 
-      v.lon,
 
-      Math.round(
-        v.accuracy || 0
-      ),
+/* =========================
+   EXPORT CSV
+========================= */
 
-      v.repeat
+function exportCSV() {
+
+  if (visits.length === 0) {
+
+    alert(
+      "There are no visits to export."
+    );
+
+    return;
+  }
+
+  const headers = [
+    "Place",
+    "Area",
+    "Category",
+    "Date",
+    "Latitude",
+    "Longitude",
+    "Return Visit",
+    "Notes"
+  ];
+
+
+  const rows =
+    visits.map(visit => [
+
+      visit.place,
+
+      visit.area,
+
+      visit.category,
+
+      new Date(
+        visit.date
+      ).toLocaleString(),
+
+      visit.lat,
+
+      visit.lng,
+
+      visit.isReturn
         ? "Yes"
         : "No",
 
-      v.notes
-
-    ]
-
-    .map(function(x){
-
-      return '"' +
-        String(
-          x ?? ""
-        ).replace(
-          /"/g,
-          '""'
-        ) +
-        '"';
-
-    })
-
-    .join(",");
+      visit.notes
+    ]);
 
 
-    csv += row + "\n";
+  const csv = [
 
-  });
+    headers,
+
+    ...rows
+
+  ].map(row =>
+
+    row.map(value =>
+
+      `"${String(value ?? "")
+        .replace(/"/g, '""')}"`
+    ).join(",")
+
+  ).join("\n");
 
 
   const blob =
     new Blob(
       [csv],
       {
-        type:
-          "text/csv;charset=utf-8"
+        type: "text/csv;charset=utf-8;"
       }
     );
 
 
   const url =
-    URL.createObjectURL(
-      blob
-    );
+    URL.createObjectURL(blob);
 
 
-  const a =
-    document.createElement(
-      "a"
-    );
+  const link =
+    document.createElement("a");
 
+  link.href = url;
 
-  a.href = url;
-
-
-  a.download =
-    "Field_Notes_" +
-    new Date()
+  link.download =
+    `Field_Notes_${new Date()
       .toISOString()
-      .slice(0,10) +
-    ".csv";
+      .slice(0,10)}.csv`;
 
+  link.click();
 
-  a.click();
-
-
-  URL.revokeObjectURL(
-    url
-  );
-
+  URL.revokeObjectURL(url);
 }
 
 
-/* ==============================
-   SHARE
-============================== */
+/* =========================
+   SHARE SUMMARY
+========================= */
 
-async function shareSummary(){
+async function shareSummary() {
 
-  const unique =
+  if (visits.length === 0) {
+
+    alert(
+      "There are no visits to share."
+    );
+
+    return;
+  }
+
+  const uniquePlaces =
     new Set(
-      visits.map(function(v){
-
-        return (
-          v.lat.toFixed(4) +
-          "," +
-          v.lon.toFixed(4)
-        );
-
-      })
+      visits.map(
+        visit =>
+          `${visit.place}|${visit.area}`
+      )
     ).size;
 
 
-  const summary =
-    "FIELD NOTES SUMMARY\n\n" +
-
-    "Visits: " +
-    visits.length +
-
-    "\nPlaces: " +
-    unique +
-
-    "\nReturns: " +
+  const returns =
     visits.filter(
-      function(v){
-        return v.repeat;
-      }
+      visit => visit.isReturn
     ).length;
 
 
-  if(
-    navigator.share
-  ){
+  const text =
+`Field Notes
 
-    try{
+Visits: ${visits.length}
+Places: ${uniquePlaces}
+Returns: ${returns}`;
+
+
+  if (
+    navigator.share
+  ) {
+
+    try {
 
       await navigator.share({
-
-        title:
-          "Field Notes",
-
-        text:
-          summary
-
+        title: "Field Notes",
+        text: text
       });
 
-    }catch(e){}
+    } catch (error) {
 
-  }else{
-
-    try{
-
-      await navigator.clipboard
-        .writeText(summary);
-
-      alert(
-        "Summary copied."
-      );
-
-    }catch(e){
-
-      alert(summary);
-
+      // User cancelled sharing.
     }
 
-  }
+  } else {
 
+    try {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+      alert(
+        "Summary copied to clipboard."
+      );
+
+    } catch (error) {
+
+      alert(text);
+    }
+  }
 }
 
 
-/* ==============================
-   CLEAR DATA
-============================== */
+/* =========================
+   CLEAR ALL
+========================= */
 
-function clearAll(){
+function clearAll() {
 
-  if(!visits.length){
+  if (visits.length === 0) {
+
+    alert(
+      "There are no saved visits."
+    );
 
     return;
-
   }
 
 
-  if(
+  const confirmed =
     confirm(
-      "This will permanently delete all saved places from this browser. Continue?"
-    )
-  ){
+      "Are you sure you want to delete ALL saved visits? This cannot be undone."
+    );
 
-    visits = [];
 
-    saveData();
+  if (!confirmed) return;
 
-    renderVisits();
 
-  }
+  visits = [];
 
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
+
+  displayVisits();
+  updateMap();
 }
 
 
-/* ==============================
-   START
-============================== */
+/* =========================
+   SECURITY / HTML ESCAPING
+========================= */
 
-renderVisits();
+function escapeHTML(value) {
+
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+/* =========================
+   START APP
+========================= */
+
+window.addEventListener(
+  "load",
+  () => {
+
+    initMap();
+
+    displayVisits();
+
+    setTimeout(
+      () => map.invalidateSize(),
+      300
+    );
+
+  }
+);
 
 </script>
 
 </body>
 </html>
+```
