@@ -10,204 +10,287 @@
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-*{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f4f6f8;
-color:#222;
+* {
+  box-sizing: border-box;
 }
 
-header{
-background:#1f2937;
-color:white;
-padding:18px;
-text-align:center;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  color: #222;
 }
 
-header h1{
-margin:0 0 5px;
-font-size:24px;
+header {
+  background: #1f2937;
+  color: white;
+  padding: 18px;
+  text-align: center;
 }
 
-header p{
-margin:0;
-font-size:14px;
-opacity:.85;
+header h1 {
+  margin: 0 0 5px;
+  font-size: 24px;
 }
 
-.container{
-width:95%;
-max-width:1000px;
-margin:20px auto;
+header p {
+  margin: 0;
+  font-size: 14px;
+  opacity: .85;
 }
 
-.stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin-bottom:15px;
+/* NAVIGATION */
+
+.navbar {
+  display: flex;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.stat{
-background:white;
-border-radius:10px;
-padding:15px;
-text-align:center;
-box-shadow:0 2px 7px rgba(0,0,0,.08);
+.navbar button {
+  flex: 1;
+  margin: 0;
+  border-radius: 0;
+  background: white;
+  color: #555;
+  padding: 14px 8px;
 }
 
-.stat strong{
-display:block;
-font-size:22px;
-margin-bottom:4px;
+.navbar button.active {
+  background: #1f2937;
+  color: white;
 }
 
-.card{
-background:white;
-padding:18px;
-border-radius:10px;
-margin-bottom:15px;
-box-shadow:0 2px 7px rgba(0,0,0,.08);
+/* PAGES */
+
+.page {
+  display: none;
 }
 
-.card h2{
-margin-top:0;
-font-size:19px;
+.page.active {
+  display: block;
 }
 
-label{
-display:block;
-margin-top:12px;
-margin-bottom:5px;
-font-weight:bold;
-font-size:14px;
+.container {
+  width: 95%;
+  max-width: 1000px;
+  margin: 20px auto;
 }
 
-input,select,textarea,button{
-width:100%;
-font:inherit;
+/* STATS */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-input,select,textarea{
-padding:11px;
-border:1px solid #ccc;
-border-radius:7px;
-background:white;
+.stat {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 7px rgba(0,0,0,.08);
 }
 
-textarea{
-min-height:80px;
-resize:vertical;
+.stat strong {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 4px;
 }
 
-button{
-border:none;
-border-radius:7px;
-padding:11px;
-margin-top:10px;
-cursor:pointer;
-background:#1f2937;
-color:white;
-font-weight:bold;
+/* CARDS */
+
+.card {
+  background: white;
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 7px rgba(0,0,0,.08);
 }
 
-button:hover{
-opacity:.9;
+.card h2 {
+  margin-top: 0;
+  font-size: 19px;
 }
 
-.location-btn{
-background:#2563eb;
+/* FORM */
+
+label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px;
 }
 
-.secondary{
-background:#6b7280;
+input,
+select,
+textarea,
+button {
+  width: 100%;
+  font: inherit;
 }
 
-.danger{
-background:#dc2626;
+input,
+select,
+textarea {
+  padding: 11px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  background: white;
 }
 
-.success{
-background:#15803d;
+textarea {
+  min-height: 80px;
+  resize: vertical;
 }
 
-.navigate{
-background:#7c3aed;
+button {
+  border: none;
+  border-radius: 7px;
+  padding: 11px;
+  margin-top: 10px;
+  cursor: pointer;
+  background: #1f2937;
+  color: white;
+  font-weight: bold;
 }
 
-#locationStatus{
-margin-top:8px;
-font-size:13px;
-color:#555;
+button:hover {
+  opacity: .9;
 }
 
-#map{
-width:100%;
-height:450px;
-border-radius:10px;
-overflow:hidden;
+.location-btn {
+  background: #2563eb;
 }
 
-.visit{
-border:1px solid #ddd;
-border-radius:9px;
-padding:14px;
-margin-top:10px;
-background:#fafafa;
+.secondary {
+  background: #6b7280;
 }
 
-.visit h3{
-margin:0 0 6px;
+.danger {
+  background: #dc2626;
 }
 
-.visit p{
-margin:5px 0;
-font-size:14px;
+.success {
+  background: #15803d;
 }
 
-.visit-buttons{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:8px;
-margin-top:10px;
+.navigate {
+  background: #7c3aed;
 }
 
-.visit-buttons button{
-margin-top:0;
+.history-btn {
+  background: #2563eb;
 }
 
-.search{
-margin-bottom:12px;
+#locationStatus {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #555;
 }
 
-.empty{
-text-align:center;
-color:#777;
-padding:20px;
+/* MAP */
+
+#map {
+  width: 100%;
+  height: 450px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-footer{
-text-align:center;
-color:#777;
-font-size:12px;
-padding:20px;
+/* VISITS */
+
+.visit {
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  padding: 14px;
+  margin-top: 10px;
+  background: #fafafa;
 }
 
-@media(max-width:600px){
-
-.stats{
-grid-template-columns:1fr;
+.visit h3 {
+  margin: 0 0 6px;
 }
 
-#map{
-height:380px;
+.visit p {
+  margin: 5px 0;
+  font-size: 14px;
 }
 
-.visit-buttons{
-grid-template-columns:1fr;
+.visit-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
 }
+
+.visit-buttons button {
+  margin-top: 0;
+}
+
+/* HISTORY */
+
+.history-date {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #ddd;
+}
+
+.history-summary {
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.search {
+  margin-bottom: 12px;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 25px;
+}
+
+/* FOOTER */
+
+footer {
+  text-align: center;
+  color: #777;
+  font-size: 12px;
+  padding: 20px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px) {
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  #map {
+    height: 380px;
+  }
+
+  .visit-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar button {
+    font-size: 13px;
+  }
 }
 </style>
 </head>
@@ -215,175 +298,273 @@ grid-template-columns:1fr;
 <body>
 
 <header>
-<h1>📍 Field Notes</h1>
-<p>Keep a simple record of places you visit.</p>
+  <h1>📍 Field Notes</h1>
+  <p>Keep a simple record of places you visit.</p>
 </header>
+
+
+<!-- NAVIGATION -->
+
+<div class="navbar">
+
+  <button
+    id="homeTab"
+    class="active"
+    onclick="showPage('home')"
+  >
+    🏠 Home
+  </button>
+
+  <button
+    id="historyTab"
+    onclick="showPage('history')"
+  >
+    📜 History
+  </button>
+
+</div>
+
+
+<!-- =========================
+     HOME PAGE
+========================= -->
+
+<div id="homePage" class="page active">
 
 <div class="container">
 
-<div class="stats">
+  <!-- STATS -->
 
-<div class="stat">
-<strong id="visitCount">0</strong>
-Visits
+  <div class="stats">
+
+    <div class="stat">
+      <strong id="visitCount">0</strong>
+      Visits
+    </div>
+
+    <div class="stat">
+      <strong id="placeCount">0</strong>
+      Places
+    </div>
+
+    <div class="stat">
+      <strong id="returnCount">0</strong>
+      Returns
+    </div>
+
+  </div>
+
+
+  <!-- ADD VISIT -->
+
+  <div class="card">
+
+    <h2>Add a Visit</h2>
+
+    <label for="placeName">
+      Place Name
+    </label>
+
+    <input
+      type="text"
+      id="placeName"
+      placeholder="e.g. Main Street Shop"
+    >
+
+
+    <label for="area">
+      Area
+    </label>
+
+    <input
+      type="text"
+      id="area"
+      placeholder="e.g. Town Centre"
+    >
+
+
+    <label for="category">
+      Category
+    </label>
+
+    <select id="category">
+
+      <option value="">
+        Select category
+      </option>
+
+      <option>Shop</option>
+      <option>Restaurant</option>
+      <option>Hotel</option>
+      <option>Office</option>
+      <option>Market</option>
+      <option>Service</option>
+      <option>Other</option>
+
+    </select>
+
+
+    <label for="notes">
+      Notes
+    </label>
+
+    <textarea
+      id="notes"
+      placeholder="Add any notes about this visit..."
+    ></textarea>
+
+
+    <button
+      class="location-btn"
+      onclick="getLocation()"
+    >
+      📍 Check My Location
+    </button>
+
+
+    <div id="locationStatus">
+      Location not captured yet.
+    </div>
+
+
+    <button
+      class="success"
+      onclick="saveVisit()"
+    >
+      Save Visit
+    </button>
+
+  </div>
+
+
+  <!-- MAP -->
+
+  <div class="card">
+
+    <h2>🗺️ Visited Places</h2>
+
+    <p style="font-size:13px;color:#666;">
+      Your saved locations appear as dots on the map.
+    </p>
+
+    <div id="map"></div>
+
+    <button
+      class="secondary"
+      onclick="fitMapToVisits()"
+    >
+      Show All Visits
+    </button>
+
+  </div>
+
+
+  <!-- RECENT VISITS -->
+
+  <div class="card">
+
+    <h2>Recent Visits</h2>
+
+    <div id="recentVisits"></div>
+
+    <button
+      class="history-btn"
+      onclick="showPage('history')"
+    >
+      📜 View Full History
+    </button>
+
+  </div>
+
+
+  <!-- TOOLS -->
+
+  <div class="card">
+
+    <h2>Tools</h2>
+
+    <button onclick="exportCSV()">
+      📄 Export Visits
+    </button>
+
+    <button
+      onclick="shareSummary()"
+      class="secondary"
+    >
+      📤 Share Summary
+    </button>
+
+    <button
+      onclick="clearAll()"
+      class="danger"
+    >
+      🗑️ Clear All Visits
+    </button>
+
+  </div>
+
+
+  <!-- ABOUT -->
+
+  <div class="card">
+
+    <h2>About</h2>
+
+    <p style="font-size:14px;line-height:1.5;">
+      This is a simple personal location and notes tracker.
+      Your saved records are stored in this browser on this device.
+    </p>
+
+    <p style="font-size:13px;color:#666;">
+      Location access is only used when you choose to check your location.
+    </p>
+
+  </div>
+
 </div>
 
-<div class="stat">
-<strong id="placeCount">0</strong>
-Places
-</div>
-
-<div class="stat">
-<strong id="returnCount">0</strong>
-Returns
-</div>
-
 </div>
 
 
-<div class="card">
+<!-- =========================
+     HISTORY PAGE
+========================= -->
 
-<h2>Add a Visit</h2>
+<div id="historyPage" class="page">
 
-<label for="placeName">Place Name</label>
+<div class="container">
 
-<input
-type="text"
-id="placeName"
-placeholder="e.g. Main Street Shop"
->
+  <div class="card">
 
+    <h2>📜 Visit History</h2>
 
-<label for="area">Area</label>
+    <p style="font-size:13px;color:#666;">
+      All your saved visits are shown here, grouped by date.
+    </p>
 
-<input
-type="text"
-id="area"
-placeholder="e.g. Town Centre"
->
+    <input
+      class="search"
+      type="text"
+      id="historySearch"
+      placeholder="Search places, areas, categories or notes..."
+      oninput="displayHistory()"
+    >
 
-
-<label for="category">Category</label>
-
-<select id="category">
-
-<option value="">Select category</option>
-<option>Shop</option>
-<option>Restaurant</option>
-<option>Hotel</option>
-<option>Office</option>
-<option>Market</option>
-<option>Service</option>
-<option>Other</option>
-
-</select>
+  </div>
 
 
-<label for="notes">Notes</label>
+  <div class="card">
 
-<textarea
-id="notes"
-placeholder="Add any notes about this visit..."
-></textarea>
+    <div
+      id="historySummary"
+      class="history-summary"
+    >
+      No visits yet.
+    </div>
 
+    <div id="historyList"></div>
 
-<button
-class="location-btn"
-onclick="getLocation()"
->
-📍 Check My Location
-</button>
-
-
-<div id="locationStatus">
-Location not captured yet.
-</div>
-
-
-<button
-class="success"
-onclick="saveVisit()"
->
-Save Visit
-</button>
-
-</div>
-
-
-<div class="card">
-
-<h2>🗺️ Visited Places</h2>
-
-<p style="font-size:13px;color:#666;">
-Your saved locations appear as dots on the map.
-</p>
-
-<div id="map"></div>
-
-<button
-class="secondary"
-onclick="fitMapToVisits()"
->
-Show All Visits
-</button>
-
-</div>
-
-
-<div class="card">
-
-<h2>Visit History</h2>
-
-<input
-class="search"
-type="text"
-id="search"
-placeholder="Search places, areas or categories..."
-oninput="displayVisits()"
->
-
-<div id="visitList"></div>
-
-</div>
-
-
-<div class="card">
-
-<h2>Tools</h2>
-
-<button onclick="exportCSV()">
-📄 Export Visits
-</button>
-
-<button
-onclick="shareSummary()"
-class="secondary"
->
-📤 Share Summary
-</button>
-
-<button
-onclick="clearAll()"
-class="danger"
->
-🗑️ Clear All Visits
-</button>
-
-</div>
-
-
-<div class="card">
-
-<h2>About</h2>
-
-<p style="font-size:14px;line-height:1.5;">
-This is a simple personal location and notes tracker.
-Your saved records are stored in this browser on this device.
-</p>
-
-<p style="font-size:13px;color:#666;">
-Location access is only used when you choose to check your location.
-</p>
+  </div>
 
 </div>
 
@@ -391,737 +572,1231 @@ Location access is only used when you choose to check your location.
 
 
 <footer>
-Personal Field Notes
+  Personal Field Notes
 </footer>
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+
 <script>
 
-const STORAGE_KEY="field_notes_v2";
+/* =========================
+   STORAGE
+========================= */
 
-let visits=JSON.parse(
-localStorage.getItem(STORAGE_KEY)||"[]"
+const STORAGE_KEY = "field_notes_v2";
+
+let visits = JSON.parse(
+  localStorage.getItem(STORAGE_KEY) || "[]"
 );
 
-let currentLocation=null;
+let currentLocation = null;
+
 let map;
-let markers=[];
+
+let markers = [];
 
 
-/* MAP */
+/* =========================
+   PAGE NAVIGATION
+========================= */
 
-function initMap(){
+function showPage(page) {
 
-map=L.map("map").setView(
-[0.0236,37.9062],
-6
-);
+  const homePage =
+    document.getElementById("homePage");
 
-L.tileLayer(
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-{
-maxZoom:19,
-attribution:"&copy; OpenStreetMap contributors"
-}
-).addTo(map);
+  const historyPage =
+    document.getElementById("historyPage");
 
-updateMap();
+  const homeTab =
+    document.getElementById("homeTab");
 
-}
+  const historyTab =
+    document.getElementById("historyTab");
 
 
-/* UPDATE MAP */
+  if (page === "home") {
 
-function updateMap(){
+    homePage.classList.add("active");
 
-if(!map)return;
+    historyPage.classList.remove("active");
 
-markers.forEach(
-marker=>map.removeLayer(marker)
-);
+    homeTab.classList.add("active");
 
-markers=[];
+    historyTab.classList.remove("active");
 
-const validVisits=visits.filter(
-visit=>
-typeof visit.lat==="number" &&
-typeof visit.lng==="number"
-);
+    setTimeout(() => {
 
-validVisits.forEach(visit=>{
+      if (map) {
+        map.invalidateSize();
+      }
 
-const marker=L.marker([
-visit.lat,
-visit.lng
-]).addTo(map);
+    }, 100);
 
-const date=new Date(
-visit.date
-).toLocaleString();
+  }
 
-marker.bindPopup(`
 
-<strong>${escapeHTML(visit.place)}</strong>
-<br>
+  if (page === "history") {
 
-${escapeHTML(visit.area||"")}
-<br>
+    homePage.classList.remove("active");
 
-${escapeHTML(visit.category||"")}
-<br>
+    historyPage.classList.add("active");
 
-<small>${date}</small>
+    homeTab.classList.remove("active");
 
-<br><br>
+    historyTab.classList.add("active");
 
-<button
-style="width:100%;margin:5px 0 0 0;background:#7c3aed;"
-onclick="navigateTo(${visit.lat},${visit.lng})"
->
-🧭 Navigate Here
-</button>
+    displayHistory();
 
-`);
-
-markers.push(marker);
-
-});
+  }
 
 }
 
 
-/* LOCATION */
+/* =========================
+   MAP
+========================= */
 
-function getLocation(){
+function initMap() {
 
-const status=
-document.getElementById("locationStatus");
+  map = L.map("map").setView(
+    [0.0236, 37.9062],
+    6
+  );
 
-if(!navigator.geolocation){
 
-status.textContent=
-"Location is not supported by this browser.";
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution:
+        "&copy; OpenStreetMap contributors"
+    }
+  ).addTo(map);
 
-return;
-}
 
-status.textContent=
-"Checking your location...";
-
-navigator.geolocation.getCurrentPosition(
-
-position=>{
-
-currentLocation={
-lat:position.coords.latitude,
-lng:position.coords.longitude
-};
-
-status.textContent=
-"✓ Location captured successfully.";
-
-},
-
-error=>{
-
-currentLocation=null;
-
-if(error.code===1){
-
-status.textContent=
-"Location permission was denied. Please allow location access.";
-
-}else if(error.code===2){
-
-status.textContent=
-"Your location could not be determined.";
-
-}else{
-
-status.textContent=
-"Location request timed out.";
-
-}
-
-},
-
-{
-enableHighAccuracy:true,
-timeout:15000,
-maximumAge:0
-}
-
-);
+  updateMap();
 
 }
 
 
-/* SAVE */
+/* =========================
+   UPDATE MAP
+========================= */
 
-function saveVisit(){
+function updateMap() {
 
-const place=
-document.getElementById("placeName")
-.value.trim();
-
-const area=
-document.getElementById("area")
-.value.trim();
-
-const category=
-document.getElementById("category")
-.value;
-
-const notes=
-document.getElementById("notes")
-.value.trim();
+  if (!map) return;
 
 
-if(!place){
-
-alert("Please enter the place name.");
-
-return;
-}
+  markers.forEach(
+    marker => map.removeLayer(marker)
+  );
 
 
-if(!currentLocation){
-
-alert(
-"Please check your location before saving this visit."
-);
-
-return;
-}
+  markers = [];
 
 
-const now=new Date();
+  const validVisits =
+    visits.filter(
+      visit =>
+        typeof visit.lat === "number" &&
+        typeof visit.lng === "number"
+    );
 
 
-const newVisit={
+  validVisits.forEach(visit => {
 
-id:Date.now(),
-
-place:place,
-
-area:area,
-
-category:category,
-
-notes:notes,
-
-lat:currentLocation.lat,
-
-lng:currentLocation.lng,
-
-date:now.toISOString()
-
-};
+    const marker =
+      L.marker([
+        visit.lat,
+        visit.lng
+      ]).addTo(map);
 
 
-const isReturn=visits.some(
-visit=>{
-
-if(
-typeof visit.lat!=="number" ||
-typeof visit.lng!=="number"
-){
-return false;
-}
-
-const distance=calculateDistance(
-newVisit.lat,
-newVisit.lng,
-visit.lat,
-visit.lng
-);
-
-return distance<=100;
-
-}
-);
+    const date =
+      new Date(
+        visit.date
+      ).toLocaleString();
 
 
-newVisit.isReturn=isReturn;
+    marker.bindPopup(`
 
-visits.unshift(newVisit);
+      <strong>
+        ${escapeHTML(visit.place)}
+      </strong>
+
+      <br>
+
+      ${escapeHTML(visit.area || "")}
+
+      <br>
+
+      ${escapeHTML(visit.category || "")}
+
+      <br>
+
+      <small>
+        ${date}
+      </small>
+
+      <br><br>
+
+      <button
+        style="
+          width:100%;
+          margin:5px 0 0 0;
+          background:#7c3aed;
+        "
+        onclick="
+          navigateTo(${visit.lat},${visit.lng})
+        "
+      >
+        🧭 Navigate Here
+      </button>
+
+    `);
 
 
-localStorage.setItem(
-STORAGE_KEY,
-JSON.stringify(visits)
-);
+    markers.push(marker);
 
-
-currentLocation=null;
-
-document.getElementById("placeName").value="";
-document.getElementById("area").value="";
-document.getElementById("category").value="";
-document.getElementById("notes").value="";
-
-document.getElementById("locationStatus")
-.textContent=
-"Location not captured yet.";
-
-
-displayVisits();
-
-updateMap();
-
-
-alert(
-isReturn
-?"Visit saved. This looks like a return visit."
-:"Visit saved successfully."
-);
+  });
 
 }
 
 
-/* DISTANCE */
+/* =========================
+   LOCATION
+========================= */
+
+function getLocation() {
+
+  const status =
+    document.getElementById(
+      "locationStatus"
+    );
+
+
+  if (!navigator.geolocation) {
+
+    status.textContent =
+      "Location is not supported by this browser.";
+
+    return;
+  }
+
+
+  status.textContent =
+    "Checking your location...";
+
+
+  navigator.geolocation.getCurrentPosition(
+
+    position => {
+
+      currentLocation = {
+
+        lat:
+          position.coords.latitude,
+
+        lng:
+          position.coords.longitude
+
+      };
+
+
+      status.textContent =
+        "✓ Location captured successfully.";
+
+    },
+
+
+    error => {
+
+      currentLocation = null;
+
+
+      if (error.code === 1) {
+
+        status.textContent =
+          "Location permission was denied. Please allow location access.";
+
+      }
+
+      else if (error.code === 2) {
+
+        status.textContent =
+          "Your location could not be determined.";
+
+      }
+
+      else {
+
+        status.textContent =
+          "Location request timed out.";
+
+      }
+
+    },
+
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+
+  );
+
+}
+
+
+/* =========================
+   SAVE VISIT
+========================= */
+
+function saveVisit() {
+
+  const place =
+    document.getElementById(
+      "placeName"
+    ).value.trim();
+
+
+  const area =
+    document.getElementById(
+      "area"
+    ).value.trim();
+
+
+  const category =
+    document.getElementById(
+      "category"
+    ).value;
+
+
+  const notes =
+    document.getElementById(
+      "notes"
+    ).value.trim();
+
+
+  if (!place) {
+
+    alert(
+      "Please enter the place name."
+    );
+
+    return;
+  }
+
+
+  if (!currentLocation) {
+
+    alert(
+      "Please check your location before saving this visit."
+    );
+
+    return;
+  }
+
+
+  const newVisit = {
+
+    id: Date.now(),
+
+    place: place,
+
+    area: area,
+
+    category: category,
+
+    notes: notes,
+
+    lat: currentLocation.lat,
+
+    lng: currentLocation.lng,
+
+    date: new Date().toISOString()
+
+  };
+
+
+  /* RETURN DETECTION */
+
+  const isReturn =
+    visits.some(visit => {
+
+      if (
+        typeof visit.lat !== "number" ||
+        typeof visit.lng !== "number"
+      ) {
+        return false;
+      }
+
+
+      const distance =
+        calculateDistance(
+          newVisit.lat,
+          newVisit.lng,
+          visit.lat,
+          visit.lng
+        );
+
+
+      return distance <= 100;
+
+    });
+
+
+  newVisit.isReturn =
+    isReturn;
+
+
+  visits.unshift(
+    newVisit
+  );
+
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(visits)
+  );
+
+
+  currentLocation = null;
+
+
+  document.getElementById(
+    "placeName"
+  ).value = "";
+
+
+  document.getElementById(
+    "area"
+  ).value = "";
+
+
+  document.getElementById(
+    "category"
+  ).value = "";
+
+
+  document.getElementById(
+    "notes"
+  ).value = "";
+
+
+  document.getElementById(
+    "locationStatus"
+  ).textContent =
+    "Location not captured yet.";
+
+
+  updateStats();
+
+  updateMap();
+
+  displayRecentVisits();
+
+
+  alert(
+    isReturn
+      ? "Visit saved. This looks like a return visit."
+      : "Visit saved successfully."
+  );
+
+}
+
+
+/* =========================
+   DISTANCE
+========================= */
 
 function calculateDistance(
-lat1,lon1,lat2,lon2
-){
+  lat1,
+  lon1,
+  lat2,
+  lon2
+) {
 
-const earthRadius=6371000;
-
-const dLat=
-(lat2-lat1)*Math.PI/180;
-
-const dLon=
-(lon2-lon1)*Math.PI/180;
-
-const a=
-Math.sin(dLat/2)*
-Math.sin(dLat/2)+
-
-Math.cos(lat1*Math.PI/180)*
-Math.cos(lat2*Math.PI/180)*
-
-Math.sin(dLon/2)*
-Math.sin(dLon/2);
-
-const c=
-2*Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a)
-);
-
-return earthRadius*c;
-
-}
+  const earthRadius =
+    6371000;
 
 
-/* DISPLAY */
-
-function displayVisits(){
-
-const list=
-document.getElementById("visitList");
-
-const search=
-document.getElementById("search")
-.value.toLowerCase()
-.trim();
+  const dLat =
+    (lat2 - lat1) *
+    Math.PI / 180;
 
 
-const filtered=visits.filter(
-visit=>
-visit.place.toLowerCase().includes(search) ||
-(visit.area||"").toLowerCase().includes(search) ||
-(visit.category||"").toLowerCase().includes(search) ||
-(visit.notes||"").toLowerCase().includes(search)
-);
+  const dLon =
+    (lon2 - lon1) *
+    Math.PI / 180;
 
 
-document.getElementById("visitCount")
-.textContent=visits.length;
+  const a =
+    Math.sin(dLat / 2) *
+    Math.sin(dLat / 2) +
+
+    Math.cos(
+      lat1 * Math.PI / 180
+    ) *
+
+    Math.cos(
+      lat2 * Math.PI / 180
+    ) *
+
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
 
 
-const uniquePlaces=new Set(
-visits.map(
-visit=>
-`${visit.place.toLowerCase()}|${(visit.area||"").toLowerCase()}`
-)
-);
+  const c =
+    2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
+    );
 
 
-document.getElementById("placeCount")
-.textContent=uniquePlaces.size;
-
-
-document.getElementById("returnCount")
-.textContent=
-visits.filter(
-visit=>visit.isReturn
-).length;
-
-
-if(filtered.length===0){
-
-list.innerHTML=`
-<div class="empty">
-No visits found.
-</div>
-`;
-
-return;
-}
-
-
-list.innerHTML=
-filtered.map(visit=>{
-
-const date=
-new Date(
-visit.date
-).toLocaleString();
-
-
-return `
-
-<div class="visit">
-
-<h3>
-${escapeHTML(visit.place)}
-${visit.isReturn?" 🔁":""}
-</h3>
-
-<p>
-<strong>Area:</strong>
-${escapeHTML(visit.area||"-")}
-</p>
-
-<p>
-<strong>Category:</strong>
-${escapeHTML(visit.category||"-")}
-</p>
-
-<p>
-<strong>Date:</strong>
-${date}
-</p>
-
-${
-visit.notes
-?`
-<p>
-<strong>Notes:</strong>
-${escapeHTML(visit.notes)}
-</p>
-`
-:""
-}
-
-
-<div class="visit-buttons">
-
-<button
-onclick="showVisitOnMap(${visit.id})"
->
-📍 Show on Map
-</button>
-
-
-<button
-class="navigate"
-onclick="navigateTo(${visit.lat},${visit.lng})"
->
-🧭 Navigate
-</button>
-
-
-<button
-class="danger"
-onclick="deleteVisit(${visit.id})"
->
-Delete
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}).join("");
+  return earthRadius * c;
 
 }
 
 
-/* NAVIGATION */
+/* =========================
+   STATS
+========================= */
 
-function navigateTo(lat,lng){
+function updateStats() {
 
-if(
-typeof lat!=="number" ||
-typeof lng!=="number"
-){
-
-alert(
-"This visit does not have a saved location."
-);
-
-return;
-}
+  document.getElementById(
+    "visitCount"
+  ).textContent =
+    visits.length;
 
 
-/*
-  Google Maps directions URL.
-
-  "Current Location" is used as the starting point.
-  The saved coordinates are used as the destination.
-*/
-
-const url=
-`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+  const uniquePlaces =
+    new Set(
+      visits.map(
+        visit =>
+          `${visit.place.toLowerCase()}|${(visit.area || "").toLowerCase()}`
+      )
+    );
 
 
-window.open(
-url,
-"_blank"
-);
-
-}
+  document.getElementById(
+    "placeCount"
+  ).textContent =
+    uniquePlaces.size;
 
 
-/* SHOW ON MAP */
-
-function showVisitOnMap(id){
-
-const visit=
-visits.find(
-item=>item.id===id
-);
-
-
-if(
-!visit ||
-typeof visit.lat!=="number" ||
-typeof visit.lng!=="number"
-){
-return;
-}
-
-
-map.setView(
-[visit.lat,visit.lng],
-17
-);
-
-
-const marker=
-markers.find(item=>{
-
-const position=
-item.getLatLng();
-
-return(
-Math.abs(position.lat-visit.lat)<0.000001 &&
-Math.abs(position.lng-visit.lng)<0.000001
-);
-
-});
-
-
-if(marker){
-marker.openPopup();
-}
+  document.getElementById(
+    "returnCount"
+  ).textContent =
+    visits.filter(
+      visit => visit.isReturn
+    ).length;
 
 }
 
 
-/* FIT MAP */
+/* =========================
+   RECENT VISITS
+========================= */
 
-function fitMapToVisits(){
+function displayRecentVisits() {
 
-const validVisits=
-visits.filter(
-visit=>
-typeof visit.lat==="number" &&
-typeof visit.lng==="number"
-);
-
-
-if(validVisits.length===0){
-
-alert(
-"There are no saved locations yet."
-);
-
-return;
-}
+  const container =
+    document.getElementById(
+      "recentVisits"
+    );
 
 
-const bounds=
-L.latLngBounds(
-validVisits.map(
-visit=>[
-visit.lat,
-visit.lng
-]
-)
-);
+  const recent =
+    visits.slice(0, 5);
 
 
-map.fitBounds(
-bounds,
-{
-padding:[30,30]
-}
-);
+  if (recent.length === 0) {
 
-}
+    container.innerHTML = `
+      <div class="empty">
+        No visits recorded yet.
+      </div>
+    `;
 
-
-/* DELETE */
-
-function deleteVisit(id){
-
-if(!confirm("Delete this visit?")){
-return;
-}
+    return;
+  }
 
 
-visits=
-visits.filter(
-visit=>visit.id!==id
-);
+  container.innerHTML =
+    recent.map(
+      visit => {
+
+        const date =
+          new Date(
+            visit.date
+          ).toLocaleString();
 
 
-localStorage.setItem(
-STORAGE_KEY,
-JSON.stringify(visits)
-);
+        return `
 
+          <div class="visit">
 
-displayVisits();
+            <h3>
+              ${escapeHTML(visit.place)}
+              ${visit.isReturn ? " 🔁" : ""}
+            </h3>
 
-updateMap();
+            <p>
+              <strong>Area:</strong>
+              ${escapeHTML(visit.area || "-")}
+            </p>
 
-}
+            <p>
+              <strong>Date:</strong>
+              ${date}
+            </p>
 
+            <div class="visit-buttons">
 
-/* EXPORT */
+              <button
+                onclick="
+                  showVisitOnMap(${visit.id})
+                "
+              >
+                📍 Show on Map
+              </button>
 
-function exportCSV(){
+              <button
+                class="navigate"
+                onclick="
+                  navigateTo(
+                    ${visit.lat},
+                    ${visit.lng}
+                  )
+                "
+              >
+                🧭 Navigate
+              </button>
 
-if(visits.length===0){
+            </div>
 
-alert(
-"There are no visits to export."
-);
+          </div>
 
-return;
-}
+        `;
 
-
-const headers=[
-"Place",
-"Area",
-"Category",
-"Date",
-"Latitude",
-"Longitude",
-"Return Visit",
-"Notes"
-];
-
-
-const rows=
-visits.map(visit=>[
-
-visit.place,
-visit.area,
-visit.category,
-new Date(visit.date).toLocaleString(),
-visit.lat,
-visit.lng,
-visit.isReturn?"Yes":"No",
-visit.notes
-
-]);
-
-
-const csv=[
-
-headers,
-...rows
-
-].map(row=>
-
-row.map(value=>
-
-`"${String(value??"")
-.replace(/"/g,'""')}"`
-
-).join(",")
-
-).join("\n");
-
-
-const blob=new Blob(
-[csv],
-{
-type:"text/csv;charset=utf-8;"
-}
-);
-
-
-const url=
-URL.createObjectURL(blob);
-
-
-const link=
-document.createElement("a");
-
-link.href=url;
-
-link.download=
-`Field_Notes_${new Date()
-.toISOString()
-.slice(0,10)}.csv`;
-
-link.click();
-
-URL.revokeObjectURL(url);
+      }
+    ).join("");
 
 }
 
 
-/* SHARE */
+/* =========================
+   HISTORY
+========================= */
 
-async function shareSummary(){
+function displayHistory() {
 
-if(visits.length===0){
+  const list =
+    document.getElementById(
+      "historyList"
+    );
 
-alert(
-"There are no visits to share."
-);
 
-return;
+  const summary =
+    document.getElementById(
+      "historySummary"
+    );
+
+
+  const search =
+    (
+      document.getElementById(
+        "historySearch"
+      ).value || ""
+    )
+    .toLowerCase()
+    .trim();
+
+
+  const filtered =
+    visits.filter(
+      visit =>
+
+        (visit.place || "")
+          .toLowerCase()
+          .includes(search)
+
+        ||
+
+        (visit.area || "")
+          .toLowerCase()
+          .includes(search)
+
+        ||
+
+        (visit.category || "")
+          .toLowerCase()
+          .includes(search)
+
+        ||
+
+        (visit.notes || "")
+          .toLowerCase()
+          .includes(search)
+
+    );
+
+
+  summary.innerHTML = `
+    <strong>${filtered.length}</strong>
+    visit${filtered.length === 1 ? "" : "s"}
+    shown
+    ${
+      search
+        ? ` for "${escapeHTML(search)}"`
+        : ""
+    }.
+  `;
+
+
+  if (filtered.length === 0) {
+
+    list.innerHTML = `
+      <div class="empty">
+        No history found.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  /*
+    Group visits by calendar date.
+  */
+
+  const groups = {};
+
+
+  filtered.forEach(
+    visit => {
+
+      const date =
+        new Date(
+          visit.date
+        );
+
+
+      const key =
+        date.toLocaleDateString(
+          undefined,
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          }
+        );
+
+
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+
+
+      groups[key].push(
+        visit
+      );
+
+    }
+  );
+
+
+  list.innerHTML =
+    Object.keys(groups)
+      .map(dateKey => {
+
+        const group =
+          groups[dateKey];
+
+
+        return `
+
+          <div class="history-date">
+            📅 ${escapeHTML(dateKey)}
+          </div>
+
+          ${
+
+            group.map(
+              visit => {
+
+                const time =
+                  new Date(
+                    visit.date
+                  ).toLocaleTimeString(
+                    undefined,
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    }
+                  );
+
+
+                return `
+
+                  <div class="visit">
+
+                    <h3>
+                      ${escapeHTML(visit.place)}
+                      ${visit.isReturn ? " 🔁" : ""}
+                    </h3>
+
+
+                    <p>
+                      <strong>Time:</strong>
+                      ${time}
+                    </p>
+
+
+                    <p>
+                      <strong>Area:</strong>
+                      ${escapeHTML(
+                        visit.area || "-"
+                      )}
+                    </p>
+
+
+                    <p>
+                      <strong>Category:</strong>
+                      ${escapeHTML(
+                        visit.category || "-"
+                      )}
+                    </p>
+
+
+                    ${
+                      visit.notes
+                        ? `
+                          <p>
+                            <strong>Notes:</strong>
+                            ${escapeHTML(
+                              visit.notes
+                            )}
+                          </p>
+                        `
+                        : ""
+                    }
+
+
+                    <div class="visit-buttons">
+
+                      <button
+                        onclick="
+                          showVisitOnMap(
+                            ${visit.id}
+                          )
+                        "
+                      >
+                        📍 Show on Map
+                      </button>
+
+
+                      <button
+                        class="navigate"
+                        onclick="
+                          navigateTo(
+                            ${visit.lat},
+                            ${visit.lng}
+                          )
+                        "
+                      >
+                        🧭 Navigate
+                      </button>
+
+
+                      <button
+                        class="danger"
+                        onclick="
+                          deleteVisit(
+                            ${visit.id}
+                          )
+                        "
+                      >
+                        Delete
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                `;
+
+              }
+            ).join("")
+
+          }
+
+        `;
+
+      })
+      .join("");
+
 }
 
 
-const uniquePlaces=new Set(
-visits.map(
-visit=>
-`${visit.place}|${visit.area}`
-)
-).size;
+/* =========================
+   SHOW VISIT ON MAP
+========================= */
+
+function showVisitOnMap(id) {
+
+  const visit =
+    visits.find(
+      item => item.id === id
+    );
 
 
-const returns=
-visits.filter(
-visit=>visit.isReturn
-).length;
+  if (
+    !visit ||
+    typeof visit.lat !== "number" ||
+    typeof visit.lng !== "number"
+  ) {
+    return;
+  }
 
 
-const text=
+  showPage("home");
+
+
+  setTimeout(() => {
+
+    map.setView(
+      [
+        visit.lat,
+        visit.lng
+      ],
+      17
+    );
+
+
+    const marker =
+      markers.find(
+        item => {
+
+          const position =
+            item.getLatLng();
+
+
+          return (
+            Math.abs(
+              position.lat - visit.lat
+            ) < 0.000001
+
+            &&
+
+            Math.abs(
+              position.lng - visit.lng
+            ) < 0.000001
+          );
+
+        }
+      );
+
+
+    if (marker) {
+      marker.openPopup();
+    }
+
+  }, 150);
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function navigateTo(
+  lat,
+  lng
+) {
+
+  if (
+    typeof lat !== "number" ||
+    typeof lng !== "number"
+  ) {
+
+    alert(
+      "This visit does not have a saved location."
+    );
+
+    return;
+  }
+
+
+  const url =
+    `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+}
+
+
+/* =========================
+   FIT MAP
+========================= */
+
+function fitMapToVisits() {
+
+  const validVisits =
+    visits.filter(
+      visit =>
+        typeof visit.lat === "number" &&
+        typeof visit.lng === "number"
+    );
+
+
+  if (
+    validVisits.length === 0
+  ) {
+
+    alert(
+      "There are no saved locations yet."
+    );
+
+    return;
+  }
+
+
+  const bounds =
+    L.latLngBounds(
+      validVisits.map(
+        visit => [
+          visit.lat,
+          visit.lng
+        ]
+      )
+    );
+
+
+  map.fitBounds(
+    bounds,
+    {
+      padding: [
+        30,
+        30
+      ]
+    }
+  );
+
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+function deleteVisit(id) {
+
+  if (
+    !confirm(
+      "Delete this visit?"
+    )
+  ) {
+    return;
+  }
+
+
+  visits =
+    visits.filter(
+      visit => visit.id !== id
+    );
+
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(visits)
+  );
+
+
+  updateStats();
+
+  updateMap();
+
+  displayRecentVisits();
+
+  displayHistory();
+
+}
+
+
+/* =========================
+   EXPORT CSV
+========================= */
+
+function exportCSV() {
+
+  if (
+    visits.length === 0
+  ) {
+
+    alert(
+      "There are no visits to export."
+    );
+
+    return;
+  }
+
+
+  const headers = [
+
+    "Place",
+    "Area",
+    "Category",
+    "Date",
+    "Latitude",
+    "Longitude",
+    "Return Visit",
+    "Notes"
+
+  ];
+
+
+  const rows =
+    visits.map(
+      visit => [
+
+        visit.place,
+
+        visit.area,
+
+        visit.category,
+
+        new Date(
+          visit.date
+        ).toLocaleString(),
+
+        visit.lat,
+
+        visit.lng,
+
+        visit.isReturn
+          ? "Yes"
+          : "No",
+
+        visit.notes
+
+      ]
+    );
+
+
+  const csv = [
+
+    headers,
+    ...rows
+
+  ]
+  .map(
+    row =>
+      row
+        .map(
+          value =>
+            `"${String(
+              value ?? ""
+            ).replace(
+              /"/g,
+              '""'
+            )}"`
+        )
+        .join(",")
+  )
+  .join("\n");
+
+
+  const blob =
+    new Blob(
+      [csv],
+      {
+        type:
+          "text/csv;charset=utf-8;"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.href =
+    url;
+
+
+  link.download =
+    `Field_Notes_${new Date()
+      .toISOString()
+      .slice(0, 10)}.csv`;
+
+
+  link.click();
+
+
+  URL.revokeObjectURL(
+    url
+  );
+
+}
+
+
+/* =========================
+   SHARE
+========================= */
+
+async function shareSummary() {
+
+  if (
+    visits.length === 0
+  ) {
+
+    alert(
+      "There are no visits to share."
+    );
+
+    return;
+  }
+
+
+  const uniquePlaces =
+    new Set(
+      visits.map(
+        visit =>
+          `${visit.place}|${visit.area}`
+      )
+    ).size;
+
+
+  const returns =
+    visits.filter(
+      visit =>
+        visit.isReturn
+    ).length;
+
+
+  const text =
 `Field Notes
 
 Visits: ${visits.length}
@@ -1129,106 +1804,176 @@ Places: ${uniquePlaces}
 Returns: ${returns}`;
 
 
-if(navigator.share){
+  if (
+    navigator.share
+  ) {
 
-try{
+    try {
 
-await navigator.share({
+      await navigator.share({
 
-title:"Field Notes",
+        title:
+          "Field Notes",
 
-text:text
+        text:
+          text
 
-});
+      });
 
-}catch(error){}
+    }
 
-}else{
+    catch(error) {
 
-try{
+      // Sharing cancelled.
 
-await navigator.clipboard.writeText(text);
+    }
 
-alert(
-"Summary copied to clipboard."
-);
+  }
 
-}catch(error){
+  else {
 
-alert(text);
+    try {
 
-}
-
-}
-
-}
-
-
-/* CLEAR */
-
-function clearAll(){
-
-if(visits.length===0){
-
-alert(
-"There are no saved visits."
-);
-
-return;
-}
+      await navigator.clipboard
+        .writeText(
+          text
+        );
 
 
-if(!confirm(
-"Are you sure you want to delete ALL saved visits? This cannot be undone."
-)){
+      alert(
+        "Summary copied to clipboard."
+      );
 
-return;
-}
+    }
 
+    catch(error) {
 
-visits=[];
+      alert(text);
 
-localStorage.removeItem(
-STORAGE_KEY
-);
+    }
 
-displayVisits();
-
-updateMap();
+  }
 
 }
 
 
-/* ESCAPE */
+/* =========================
+   CLEAR ALL
+========================= */
 
-function escapeHTML(value){
+function clearAll() {
 
-return String(value||"")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+  if (
+    visits.length === 0
+  ) {
+
+    alert(
+      "There are no saved visits."
+    );
+
+    return;
+  }
+
+
+  if (
+    !confirm(
+      "Are you sure you want to delete ALL saved visits? This cannot be undone."
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  visits = [];
+
+
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
+
+
+  updateStats();
+
+  updateMap();
+
+  displayRecentVisits();
+
+  displayHistory();
 
 }
 
 
-/* START */
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(
+  value
+) {
+
+  return String(
+    value || ""
+  )
+
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+
+  .replace(
+    /</g,
+    "&lt;"
+  )
+
+  .replace(
+    />/g,
+    "&gt;"
+  )
+
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+
+  .replace(
+    /'/g,
+    "&#039;"
+  );
+
+}
+
+
+/* =========================
+   START APP
+========================= */
 
 window.addEventListener(
-"load",
-()=>{
+  "load",
+  () => {
 
-initMap();
+    initMap();
 
-displayVisits();
+    updateStats();
 
-setTimeout(
-()=>map.invalidateSize(),
-300
-);
+    displayRecentVisits();
 
-}
+    displayHistory();
+
+
+    setTimeout(
+      () => {
+
+        if (map) {
+          map.invalidateSize();
+        }
+
+      },
+      300
+    );
+
+  }
 );
 
 </script>
